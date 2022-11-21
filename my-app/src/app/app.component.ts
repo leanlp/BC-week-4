@@ -13,7 +13,6 @@ import { __values } from 'tslib';
 
 // const ERC20VOTES = "0x3A4a8459f38e131fa5071a3E0444E64313F7343E"
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -30,10 +29,12 @@ export class AppComponent {
   tokenBalance: number | undefined
   votePower: number | undefined
   tokenContract: ethers.Contract | undefined
-  ballotContract: ethers.Contract | undefined
+  ballotContract: ethers.Contract | undefined | any
+  
 
 
   ballotContractAddress = "0x06157a790bc1b3f4f337859686c32f0123084331"
+  ballotContractAddressN="0x1f755883bcfb37434168c6f1af16db083dd73b60"
  
   account: any;
   signer: ethers.Wallet | undefined;
@@ -42,7 +43,7 @@ export class AppComponent {
   voteBaBn: string | undefined
   voteBa: string | undefined
   MMaddress: string| undefined
-  proposals: undefined | BigNumber 
+  proposals:  BigNumber | undefined
   winnerProposal: string | undefined
   
  
@@ -95,7 +96,7 @@ export class AppComponent {
       this.signer
     )
 
-    this.ballotContract = this.ballotContract.attach(this.ballotContractAddress).connect(this.provider)
+    this.ballotContract = this.ballotContract.attach(this.ballotContractAddress).connect(this.signer)
     
     this.ballotContract["winnerName"]().then(
       (winners: string) => {
@@ -110,25 +111,16 @@ export class AppComponent {
        (proposals: BigNumber) => {
          this.proposals = (proposals)
         })
-console.log(this.proposals)
 
 
 
-// this.ballotContract["vote"](this.voteId, this.votePower).then(
-// (voteId: number) =>  {
-// })
-
-// function convertStringArrayToBytes32(array: string[]) {
-//   const bytes32Array = [];
-//    {
-//     bytes32Array(ethers.utils.formatBytes32String(array[1]));
-//   }
-//   return bytes32Array;
-// }
-// for (let index = 0; index < this.proposals.length; index++) {
-//   const proposal = await ballotContract.proposals(index);
-// }
-
+async function convertToBytes(proposalsArray: string[]) {
+  let formattedArray = []
+  for (let i = 0; i < proposalsArray.length; i++) {
+       formattedArray.push(ethers.utils.formatBytes32String(proposalsArray[i]))
+  }
+  return formattedArray
+}
 
     
  console.log("winner()")
@@ -138,12 +130,8 @@ console.log(this.proposals)
 //  return parseFloat(ethers.utils.formatEther(totalSupply));
 // }
 
-    
- 
   }
 
-
-  
   request(){
     console.log("Trying to mint to " + this.wallet?.address);
     this.http
@@ -154,11 +142,13 @@ console.log(this.proposals)
 
   }
   
-  vote(voteId: string)  {
-    console.log("trying to vote for " + voteId);
-    // await this.ballotContract["vote"](voteId)
-    //this.ballotContract["vote"](voteId);
-    //todo: pick ballot contract['vote'](voteId)
+  async vote(voteId: string) {
+  
+  const vote = await this.ballotContract["vote"](3, 10)  
+  console.log("trying to vote for " + voteId);
+  await vote.wait()
+  const voteTx = vote.hash
+  console.log("hash of Vote" + voteTx)
   }
 
   async connectWallet() {
