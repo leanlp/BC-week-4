@@ -8,7 +8,7 @@ import tokenJson2 from "../assets/TokenizedBallot.json"
 
 import { Bytes, BytesLike, formatBytes32String, formatEther, formatUnits, getAddress, hexValue, parseBytes32String } from 'ethers/lib/utils';
 import { HttpClient } from '@angular/common/http';
-import { __values } from 'tslib';
+
 
 
 // const ERC20VOTES = "0x3A4a8459f38e131fa5071a3E0444E64313F7343E"
@@ -23,7 +23,8 @@ export class AppComponent {
   
   tokenContractAddress: string | undefined;
 
-  wallet: ethers.Wallet | undefined
+  // wallet: ethers.Wallet | undefined
+  wallet: any|undefined
   provider: ethers.providers.BaseProvider| any
   etherBalance: number | undefined
   tokenBalance: number | undefined
@@ -33,38 +34,45 @@ export class AppComponent {
   
 
  
-  
-  ballotContractAddress = "0x06157a790bc1b3f4f337859686c32f0123084331"
-  ballotContractAddressN="0x1f755883bcfb37434168c6f1af16db083dd73b60"
  
-  account: any;
+  ballotContractAddress = "0x06157a790bc1b3f4f337859686c32f0123084331"
+  
+ 
   signer: ethers.Wallet | undefined;
 
   winner: string | undefined
   voteBaBn: string | undefined
   voteBa: string | undefined
-  MMaddress: string| undefined
+
   proposals:  BigNumber | undefined
   winnerProposal: string | undefined
   proposals1: BigNumber| undefined;
   proposals2: BigNumber| undefined;
   proposals3: string | undefined;
-  
+  // accounts: ethers.Wallet | undefined
  
   
 
   constructor(private http: HttpClient){}
   
-  createWallet() {
+  async createWallet() {
   
-  
-  this.provider = new ethers.providers.InfuraProvider("goerli", { infura: 'INFURA_API_KEY' })
+    
+    this.wallet = ethers.Wallet.createRandom().connect(this.provider)
+    this.signer = (this.wallet).connect(this.provider)
+    this.provider = new ethers.providers.InfuraProvider("goerli", { infura: 'INFURA_API_KEY' })
   // this.wallet = new ethers.Wallet((this.PRIVATE_KEY))
-  this.wallet = ethers.Wallet.createRandom().connect(this.provider)
-  this.signer = (this.wallet).connect(this.provider)
+
   
- 
-  this.http
+  
+  
+  // this.wallet = await window.ethereum.request({ method: "eth_accounts" });
+  // this.provider = new ethers.providers.Web3Provider(window.ethereum);
+  // this.signer = await this.provider.getSigner();
+
+ console.log(this.wallet, this.provider, this.signer)
+  
+ this.http
     .get<any>("http://localhost:3000/token-address")
     .subscribe((ans) => {
      this.tokenContractAddress = ans.result;
@@ -86,7 +94,7 @@ export class AppComponent {
       ethers.utils.formatEther(tokenBalanceBn)
       );
   });
-  this.tokenContract["getPastVotes"](this.signer?.address, 7941876).then(
+  this.tokenContract["getPastVotes"](this.signer?.address, 7941800).then(
     (votePowerBn: BigNumber) => {
     this.votePower = parseFloat(ethers.utils.formatEther(votePowerBn)
     );
@@ -128,7 +136,58 @@ export class AppComponent {
                 this.proposals3 = (proposals3)
                })
                
-// async function proposal(this: any, num: number) {
+
+  }
+  getProposals() {
+    return this.proposals}
+
+  // async getProposals() {
+  //   const props = await this.ballotContract['proposals'];
+   
+  //   this.proposals.forEach((element:string, index:number) => {
+  //     console.log(`Proposal ${index}: ${element}`)
+  //   });
+  //   return this.proposals;
+  // }
+
+  request(){
+    console.log("Trying to mint to " + this.wallet?.address);
+    this.http
+    .post<any>('http://localhost:3000/request-tokens', {address: this.wallet?.address})
+    .subscribe((ans) => {
+      console.log(ans);
+    });
+
+  }
+  
+  async vote(voteId: string) {
+  const vote = await this.ballotContract["vote"](3, 1)  
+  console.log("trying to vote for " + voteId);
+  await vote.wait()
+  const voteTx = vote.hash
+  console.log("hash of Vote" + voteTx)
+  }
+
+  async connectWallet() {
+
+    const wallet = await window.ethereum.request({ method: "eth_accounts" });
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+  // console.log( wallet, signer, provider);
+  
+  }  
+
+  }
+
+
+
+
+
+
+
+  // async function proposal(proposalsArray: string[]) {
 
 //   const proposal = await this.ballotContract['proposals'][num].name.then(()=>{
 //   (proposal: string) => {
@@ -146,43 +205,4 @@ export class AppComponent {
 //   }
 //   return formattedArray
 // }
-
-  }
-
-  request(){
-    console.log("Trying to mint to " + this.wallet?.address);
-    this.http
-    .post<any>('http://localhost:3000/request-tokens', {address: this.wallet?.address})
-    .subscribe((ans) => {
-      console.log(ans);
-    });
-
-  }
-  
-  async vote(voteId: string) {
-  const vote = await this.ballotContract["vote"](3, 0.1)  
-  console.log("trying to vote for " + voteId);
-  await vote.wait()
-  const voteTx = vote.hash
-  console.log("hash of Vote" + voteTx)
-  }
-
-  async connectWallet() {
-    // A Web3Provider wraps a standard Web3 provider, which is
-// what MetaMask injects as window.ethereum into each page
-const MetaMaskprovider = new ethers.providers.Web3Provider(window.ethereum)
-// MetaMask requires requesting permission to connect users accounts
-await MetaMaskprovider.send("eth_requestAccounts", []);
-// The MetaMask plugin also allows signing transactions to
-// send ether and pay to change state within the blockchain.
-// For this, you need the account signer...
-  const signer = MetaMaskprovider.getSigner();
-  this.MMaddress = await signer._address
-  console.log(this.signer?.address);
-  }  
-
-
-}
-
-
-
+// this.getProposals()
