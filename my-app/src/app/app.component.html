@@ -28,7 +28,7 @@
           </div>       
           </div>
           <div *ngIf="wallet">
-          <p class="lead mb-4"> this is your address: {{wallet.address}}</p>
+          <p class="lead mb-4"> this is your address: {{wallet}}</p>
           <p class="lead mb-4"> the token contract is: {{tokenContractAddress}}</p>
           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <div class="card p-2 m-1 text-bg-dark">
@@ -50,18 +50,24 @@
           <input  #voteId type="number" min="0" [max]="votePower" placeholder="Proposal Id">
           <button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="vote(voteId.value)">Vote</button>
         </div> 
-        <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="request()">Request</button></div>
-              
-              <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="connectWallet()">Winner</button>
-                
+        <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="request(voteId.value)">Request</button></div>
+              <div>
+              <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="getProposals()">getProposals</button></div>
+                <!-- <input type="text" [value]="getProposals"> -->
                
                 <div><p>N° {{winnerProposal}} Proposal Winner,     Name : {{winner}}</p></div>
-                
-                <div><p>proposal 0: {{proposals}}</p></div>
+                <div> </div>
+               
+                <div><p>proposal 0: {{proposals0}}</p></div>
                 <div><p>proposal 1: {{proposals1}}</p></div>
                 <div><p>proposal 2: {{proposals2}}</p></div>
                 <div><p>proposal 3: {{proposals3}}</p></div>
-                <div><p>proposal 3: {{getProposals}}</p></div>
+                <!-- <div><p>proposal 3: {{getProposals()}}hjj</p></div> -->
+                
+                
+
+
+
               
               </div>
               </div>
@@ -78,4 +84,3 @@
     </footer>
   </div>
 
-      
