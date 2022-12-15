@@ -57,7 +57,7 @@ export class AppComponent {
 
   constructor(private http: HttpClient){}
   
-  async createWallet() {
+  async start() {
   
     // this.wallet = ethers.Wallet.createRandom().connect(this.provider)
     // this.signer = (this.wallet).connect(this.provider)
@@ -220,7 +220,7 @@ export class AppComponent {
               
       
 
-  request(mintAmount: string){
+  async request(mintAmount: string){
                 // console.log("Trying to mint to " + this.signer?._address, this.wallet?.address, this.accounts, this.signer?.connect);
                 this.http
                 .post<any>('http://localhost:3000/request-tokens', {address: this.wallet?.address, amount: mintAmount})

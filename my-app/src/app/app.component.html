@@ -1,35 +1,39 @@
 <div class="h-100 ">
 <body class="d-flex h-100 text-center text-bg-dark">
     
-  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <div class="cover-container d-flex w-100 h-50 p-3 mx-auto flex-column">
     <header class="mb-auto">
       <div>
-        <h3 class="float-md-start px-4 mb-3">Full  Node</h3>
-        <nav class="nav nav-masthead justify-content-center float-md-end">
-          <a class="nav-link fw-bold py-1 px-1 active" aria-current="page" href="#">Ethereum</a>
+        <h3 class="float-md-start px-1 mb-3">Full  Node</h3>
+        <nav class="nav nav-masthead justify-content-center ">
+          <a class="nav-link fw-bold py-1 px-1 active" aria-current="page" href="#">Goerli</a>
           <a class="nav-link fw-bold py-1 px-1" href="#">Optimism</a>
           <a class="nav-link fw-bold py-1 px-1" href="#">Polygon</a>
           <a class="nav-link fw-bold py-1 px-1" href="#">Chia</a>
         </nav>
+       
       </div>
+      
     </header>
   
-    <main class="px-3">
+    <main class="px-2">
       
-      <div class="px-4 py-5 my-5 text-center">
+      <div class="px-2 py-1 my-2 text-center">
         <h1 class="display-5 fw-bold">Proyect Week 4</h1>
+        <br>
         <div class="col-lg-6 mx-auto">
           <div *ngIf="!wallet">
-            <p class="lead mb-4">Choose your conection method</p>
-            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-              <button type="button" class="btn btn-primary btn-lg px-4 gap-3" (click)="createWallet()">Create Wallet</button>
-              <button  type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="connectWallet()">Connect Wallet</button>
-              <button disable type="button" class="btn btn-info btn-lg px-4 gap-3" >Import Wallet</button>
+            <p class="lead mb-4">Connect and Start</p>
+            <div class="d-grid gap-2  justify-content-sm-center">
+              <button  type="button" class="btn btn-success btn-lg px-4 gap-3 " (click)="connectWallet()">Connect Wallet</button>
+              <button type="button" class="btn btn-primary btn-lg px-4 gap-3" (click)="start()">Start Voting</button>
+             
+              <!-- <button disable type="button" class="btn btn-info btn-lg px-4 gap-3" >Import Wallet</button> -->
           </div>       
           </div>
           <div *ngIf="wallet">
-          <p class="lead mb-4"> this is your address: {{wallet}}</p>
-          <p class="lead mb-4"> the token contract is: {{tokenContractAddress}}</p>
+          <p class=" card text-bg-dark container-xxl "> this is your address: {{wallet}}</p>
+          <p class="card text-bg-dark container-xxl "> the token contract is: {{tokenContractAddress}}</p>
           <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <div class="card p-2 m-1 text-bg-dark">
             <p>Ether Balance</p>
@@ -45,15 +49,16 @@
             </div>
             
           </div> 
+          <!-- <input class="px-5 py-2 text-bg-dark" #mintAmount type="string" min="0" [max]="5" placeholder="Token Request"> -->
+          <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="request(voteId.value)">Request Token for Vote</button></div>
           <div>
-          <p>Vote:</p>
-          <input  #voteId type="number" min="0" [max]="votePower" placeholder="Proposal Id">
+          <input class="px-5 py-2 text-bg-dark" #voteId type="number" min="0" [max]="3" placeholder="Proposal Id">
           <button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="vote(voteId.value)">Vote</button>
         </div> 
-        <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="request(voteId.value)">Request</button></div>
+        
+        <br>
               <div>
-              <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="getProposals()">getProposals</button></div>
-                <!-- <input type="text" [value]="getProposals"> -->
+             
                
                 <div><p>N° {{winnerProposal}} Proposal Winner,     Name : {{winner}}</p></div>
                 <div> </div>
@@ -62,13 +67,8 @@
                 <div><p>proposal 1: {{proposals1}}</p></div>
                 <div><p>proposal 2: {{proposals2}}</p></div>
                 <div><p>proposal 3: {{proposals3}}</p></div>
-                <!-- <div><p>proposal 3: {{getProposals()}}hjj</p></div> -->
-                
-                
-
-
-
-              
+                          
+                              
               </div>
               </div>
              
