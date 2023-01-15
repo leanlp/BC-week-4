@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { BigNumber, Contract, ethers, providers, Signer, Wallet } from 'ethers';
 import tokenJson from '../assets/MyToken.json';
 import tokenJson2 from "../assets/TokenizedBallot.json"
-import { Bytes, BytesLike, formatBytes32String, formatEther, formatUnits, getAddress, hexValue, parseBytes32String } from 'ethers/lib/utils';
+import { Bytes, BytesLike, formatBytes32String, formatEther, formatUnits, getAddress, hexValue, isAddress, parseBytes32String } from 'ethers/lib/utils';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Token } from '@angular/compiler';
@@ -223,15 +223,17 @@ export class AppComponent {
   async request(mintAmount: string){
                 // console.log("Trying to mint to " + this.signer?._address, this.wallet?.address, this.accounts, this.signer?.connect);
                 this.http
-                .post<any>('http://localhost:3000/request-tokens', {address: this.wallet?.address, amount: mintAmount})
+                .post<any>('http://localhost:3000/request-tokens', {address: this.wallet, amount: mintAmount})
                 .subscribe((ans) => {
                   console.log(ans);
+                  console.log(this.tokenContractAddress)
+                  console.log(mintAmount)
                 });
 
   }
   
   async vote(voteId: string) {
-  const vote = await this.ballotContract["vote"](3, 1)  
+  const vote = await this.ballotContract["vote"](voteId, 1)  
   console.log("trying to vote for " + voteId);
   await vote.wait()
   const voteTx = vote.hash

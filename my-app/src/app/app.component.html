@@ -49,8 +49,8 @@
             </div>
             
           </div> 
-          <!-- <input class="px-5 py-2 text-bg-dark" #mintAmount type="string" min="0" [max]="5" placeholder="Token Request"> -->
-          <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="request(voteId.value)">Request Token for Vote</button></div>
+          <input class="px-5 py-2 text-bg-dark" #mintAmount type="string" min="0" [max]="5" placeholder="Token Request">
+          <div><button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="request(mintAmount.value)">Request Token for Vote</button></div>
           <div>
           <input class="px-5 py-2 text-bg-dark" #voteId type="number" min="0" [max]="3" placeholder="Proposal Id">
           <button type="button" class="btn btn-success btn-lg px-4 gap-3" (click)="vote(voteId.value)">Vote</button>
